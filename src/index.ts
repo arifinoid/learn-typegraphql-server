@@ -12,12 +12,19 @@ import { redis } from "./redis";
 import { LoginResolver } from "./module/user/Login";
 import { MeResolver } from "./module/user/Me";
 import { BiodataResolver } from "./module/bio/Biodata";
+import { confirmUserResolver } from "./module/user/confirmUser";
 
 const main = async () => {
   await createConnection();
 
   const schema = await buildSchema({
-    resolvers: [MeResolver, RegisterResolver, LoginResolver, BiodataResolver]
+    resolvers: [
+      MeResolver,
+      RegisterResolver,
+      LoginResolver,
+      BiodataResolver,
+      confirmUserResolver
+    ]
   });
 
   const apolloServer = new ApolloServer({
@@ -55,9 +62,9 @@ const main = async () => {
 
   apolloServer.applyMiddleware({ app });
 
-  app.listen(PORT, () =>
-    console.log(`Server started on http://localhost:${PORT}`)
-  );
+  app.listen(PORT, () => {
+    console.log(`Server started on http://localhost:${PORT}`);
+  });
 };
 
 main();
