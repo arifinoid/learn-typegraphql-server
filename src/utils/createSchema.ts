@@ -11,6 +11,7 @@ import {
   CreateUserResolver,
   createProductResolver
 } from "../modules/user/CreateUser";
+import { ProfilePictureResolver } from "../modules/user/ProfilePicture";
 
 export const createSchema = () =>
   buildSchema({
@@ -23,7 +24,8 @@ export const createSchema = () =>
       MeResolver,
       RegisterResolver,
       CreateUserResolver,
-      createProductResolver
+      createProductResolver,
+      ProfilePictureResolver
     ],
     authChecker: ({ context: { req } }) => {
       return !!req.session.userId;
