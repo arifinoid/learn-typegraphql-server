@@ -5,6 +5,10 @@ import { createConnection } from "typeorm";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
+import queryComplexity, {
+  simpleEstimator,
+  fieldConfigEstimator
+} from "graphql-query-complexity";
 
 import { redis } from "./redis";
 import { createSchema } from "./utils/createSchema";
@@ -16,7 +20,19 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ req, res }: any) => ({ req, res })
+    context: ({ req, res }: any) => ({ req, res }),
+    validationRules: [
+      queryComplexity({
+        maximumComplexity: 8,
+        variables: {},
+        onComplete: (complexity: number) =>
+          console.log(`Query complexity: ${complexity}`),
+        estimators: [
+          fieldConfigEstimator(),
+          simpleEstimator({ defaultComplexity: 1 })
+        ]
+      }) as any
+    ]
   });
   const app = Express();
   const PORT = 4000;
